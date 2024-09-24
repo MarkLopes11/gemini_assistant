@@ -4,7 +4,7 @@ import os
 import playsound
 import speech_recognition as sr
 
-GOOGLE_API_KEY = 'API_KEY'  # Replace with your actual API key
+GOOGLE_API_KEY = 'AIzaSyDOSxRW3cHR1RKS_z13B6LZ4Qwb-wjGBls'  # Replace with your actual API key
 genai.configure(api_key=GOOGLE_API_KEY)
 
 # Generation configuration for the model
@@ -76,6 +76,6 @@ while True:
     print(response_text)  # Print the response
     text_to_speech(response_text)  # Convert the response to speech
 
-    if "goodbye" in response_text.lower() or user_input.lower():
+    if "goodbye" in response_text.lower():
         print("Exiting program...")
         break
