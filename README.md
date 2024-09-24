@@ -2,7 +2,7 @@ Gemini assistant that answers in text and voice, takes input in voice
 
 wait for 'Listening...' to be displayed in the terminal before speaking in the mic 
 
-if you or the ai says 'goodbye', the program is terminated
+if the ai says 'goodbye', the program is terminated
 
 ---
 
