@@ -1,1 +1,1 @@
-Gemini assistant that asnwers in text and voice, takes input in text
+Gemini assistant that answers in text and voice, takes input in text
