@@ -2,7 +2,7 @@ Gemini assistant that answers in text and voice, takes input in voice(Terminal a
 
 wait for 'Hold the spacebar to speak...' to be displayed in the terminal before holding spacebar
 
-After you hold spacebar 'Listening... Hold spacebar to speak.' will be displayed, hold spacebar will you finish your input
+After you hold spacebar 'Listening... Hold spacebar to speak.' will be displayed, hold spacebar till you finish your input
 
 if the ai says 'goodbye', the program is terminated
 
