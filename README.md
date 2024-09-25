@@ -4,7 +4,7 @@ wait for 'Hold the spacebar to speak...' to be displayed in the terminal before 
 
 After you hold spacebar 'Listening... Hold spacebar to speak.' will be displayed, hold spacebar will you finish your input
 
-if you or the ai says 'goodbye', the program is terminated
+if the ai says 'goodbye', the program is terminated
 
 https://aistudio.google.com/app/apikey - get the api key here
 
