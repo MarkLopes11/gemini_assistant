@@ -1,0 +1,6 @@
+google.generativeai 
+gtts 
+playsound
+speechrecognition 
+keyboard 
+python-dotenv==0.19.0
