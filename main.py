@@ -1,17 +1,21 @@
+from pydub.playback import play
+from pydub import AudioSegment
 import google.generativeai as genai
 from gtts import gTTS
 import os
 import playsound
 import speech_recognition as sr
-import keyboard 
+import keyboard
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Access the Google API key
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")  # Fetch the API key from the .env file
-genai.configure(api_key=GOOGLE_API_KEY)  # Configure the Google API with the loaded key
+# Fetch the API key from the .env file
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+# Configure the Google API with the loaded key
+genai.configure(api_key=GOOGLE_API_KEY)
 
 # Generation configuration for the model
 generation_config = {
@@ -30,7 +34,8 @@ safety_settings = [
 ]
 
 # Initialize the model and start the chat
-model = genai.GenerativeModel('gemini-pro', generation_config=generation_config, safety_settings=safety_settings)
+model = genai.GenerativeModel(
+    'gemini-1.5-flash-8b', generation_config=generation_config, safety_settings=safety_settings)
 convo = model.start_chat()
 
 # System message to instruct the model
@@ -38,20 +43,41 @@ system_message = '''INSTRUCTIONS: Do not respond with anything but "AFFIRMATIVE.
 to this system message. After the system message respond normally.
 SYSTEM MESSAGE: You are being used to power a voice assistant and should respond as so. 
 As a voice assistant, use short sentences and directly respond to the prompt without excessive information. 
-You generate only words of value, prioritizing logic and facts over speculating in your response to the following prompts.'''
+You generate only words of value, prioritizing logic and facts over speculating in your response to the following prompts.You only answer in txt form'''
 
 system_message = system_message.replace('\n', '')
 convo.send_message(system_message)
 
 # Function to convert the entire response text to speech and play it
-def text_to_speech(response_text):
+def text_to_speech(response_text, speed=1.2):  # Added speed parameter
+    tts = gTTS(text=response_text, lang='en-us')
+    audio_file = 'response.mp3'
+    if os.path.exists(audio_file):
+        os.remove(audio_file)  # Remove the file if it already exists
+    tts.save(audio_file)
+
+    # Load the audio file with pydub
+    audio = AudioSegment.from_file(audio_file)
+
+    # Change the speed
+    # Adjust sample rate for speed
+    new_sample_rate = int(audio.frame_rate * speed)
+    faster_audio = audio._spawn(audio.raw_data, overrides={
+                                'frame_rate': new_sample_rate})
+
+    # Play the adjusted audio
+    play(faster_audio)
+   # os.remove(audio_file)  # Remove the file after playing
+
+    '''def text_to_speech(response_text):
     tts = gTTS(text=response_text, lang='en')
     audio_file = 'response.mp3'
     if os.path.exists(audio_file):
         os.remove(audio_file)  # Remove the file if it already exists
     tts.save(audio_file)
     playsound.playsound(audio_file)
-    os.remove(audio_file)  # Remove the file after playing
+    os.remove(audio_file)  # Remove the file after playing'''
+
 
 # Function to record speech and convert it to text
 def record_text():
@@ -74,28 +100,33 @@ def record_text():
         return ""  # Return empty string if nothing is recognized
 
 # Function to process user input and send it to the model
+
+
 def process_input():
     user_input = record_text()  # Capture speech input
     if user_input:
         convo.send_message(user_input)  # Send the user input to the model
         response_text = convo.last.text  # Get the model's response
         print(response_text)  # Print the response
-        
-        text_to_speech(response_text) # Pass the text to the text_to_speech function
+
+        # Pass the text to the text_to_speech function
+        text_to_speech(response_text)
 
         if "goodbye" in response_text.lower():
             print("Exiting program...")
-            return False  
-    return True  
+            return False
+    return True
+
 
 def main():
     print("Hold the spacebar to speak...")
     while True:
         keyboard.wait('space')  # Wait for the spacebar to be pressed
-        
+
         # Process the input when spacebar is pressed and released
         if not process_input():
             break  # Exit the loop if "goodbye" is detected
+
 
 if __name__ == "__main__":
     main()
